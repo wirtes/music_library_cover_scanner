@@ -7,6 +7,7 @@
 - Finds album directories missing `cover.jpg`
 - Extracts embedded artwork from audio tags into `cover.jpg`
 - Reports directories that have neither `cover.jpg` nor embedded artwork
+- Downloads artwork for albums with no `album.jpg`, no `cover.jpg`, and no embedded artwork
 - Supports dry-run mode to preview actions without writing files
 - Works recursively from a root music directory
 
@@ -40,6 +41,7 @@ At least one action flag is required:
 - `--scan-missing-cover`
 - `--extract`
 - `--report-missing-artwork`
+- `--download-missing-artwork`
 
 ### Common Examples
 
@@ -76,7 +78,22 @@ python3 music_cover_scan.py "/path/to/music" \
   --report-missing-artwork
 ```
 
-6. Use custom audio extensions:
+6. Download missing artwork into `cover.jpg` (without editing music files):
+
+```bash
+python3 music_cover_scan.py "/path/to/music" --download-missing-artwork
+```
+
+7. Preview download and extraction actions without writing files:
+
+```bash
+python3 music_cover_scan.py "/path/to/music" \
+  --extract \
+  --download-missing-artwork \
+  --dry-run
+```
+
+8. Use custom audio extensions:
 
 ```bash
 python3 music_cover_scan.py "/path/to/music" \
@@ -89,6 +106,7 @@ python3 music_cover_scan.py "/path/to/music" \
 - `--scan-missing-cover` list album directories missing `cover.jpg`
 - `--extract` extract embedded artwork to `cover.jpg` when missing
 - `--report-missing-artwork` list directories with no `cover.jpg` and no embedded artwork
+- `--download-missing-artwork` download art when `album.jpg` and `cover.jpg` are missing and there is no embedded art
 - `--dry-run` preview extraction without writing files
 - `--extensions ...` override detected audio extensions
 - `--verbose` enable verbose logs
@@ -96,5 +114,6 @@ python3 music_cover_scan.py "/path/to/music" \
 ## Notes
 
 - The script only writes `cover.jpg` when `--extract` is used and `--dry-run` is not set.
+- The script only writes `cover.jpg`; it does not modify audio files.
 - If a directory already has `cover.jpg`, extraction is skipped for that directory.
 - Embedded image formats are auto-detected (JPEG/PNG/GIF/BMP/WEBP).
