@@ -6,7 +6,7 @@ music library and performs independent, flag-controlled steps:
 
 1) Check album directories for missing `cover.jpg`
 2) Extract embedded artwork from music files into `cover.jpg`
-3) Report directories with neither `artwork.jpg` nor embedded artwork
+3) Report directories with neither `cover.jpg` nor embedded artwork
 
 Requires: mutagen
 Install with: pip install mutagen
@@ -71,12 +71,12 @@ def parse_args() -> argparse.Namespace:
         help="Extract embedded artwork to cover.jpg for directories missing it.",
     )
     parser.add_argument(
-        "--report-missing-artwork",
-        action="store_true",
-        help=(
-            "List album directories with neither artwork.jpg nor embedded artwork "
+            "--report-missing-artwork",
+            action="store_true",
+            help=(
+            "List album directories with neither cover.jpg nor embedded artwork "
             "in their music files."
-        ),
+            ),
     )
 
     parser.add_argument(
@@ -246,7 +246,6 @@ def process_album_dirs(root: Path, actions: argparse.Namespace) -> int:
         stats.album_dirs_scanned += 1
 
         cover_jpg = album_dir / "cover.jpg"
-        artwork_jpg = album_dir / "artwork.jpg"
         has_cover = cover_jpg.is_file()
 
         if has_cover:
@@ -276,13 +275,12 @@ def process_album_dirs(root: Path, actions: argparse.Namespace) -> int:
                 logging.info("No embedded art found for extraction: %s", album_dir)
 
         if actions.report_missing_artwork:
-            has_artwork_jpg = artwork_jpg.is_file()
             has_embedded = embedded_source is not None and embedded_data is not None
-            if not has_artwork_jpg and not has_embedded:
+            if not has_cover and not has_embedded:
                 missing_both.append(album_dir)
 
     if actions.report_missing_artwork:
-        print("\nDirectories with neither artwork.jpg nor embedded artwork:")
+        print("\nDirectories with neither cover.jpg nor embedded artwork:")
         if missing_both:
             for path in missing_both:
                 print(path)
